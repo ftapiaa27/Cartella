@@ -90,7 +90,6 @@ class Game:
         
 game = Game()
 while game.alive:
-    game.print_board(game.board_back)
     print()
     game.print_board(game.board_front)
     if game.verify_game() == 0:
