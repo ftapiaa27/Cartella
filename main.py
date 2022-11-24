@@ -3,15 +3,15 @@ class Game:
     alive = 1
     board_back = [[" " for i in range(9)] for j in range(9)]
     board_front = [["#" for i in range(9)] for j in range(9)]
+    bomb_coor = []
     def __init__(self):
         x_coor = [0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8]
         y_coor = [0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8]
-        # random_pairs = []
         for i in range(10):
             temp = []
             temp.append(x_coor.pop(random.choice(x_coor)))
             temp.append(y_coor.pop(random.choice(y_coor)))
-            # random_pairs.append(temp)
+            self.bomb_coor.append(temp)
             self.board_back[temp[0]][temp[1]] = "B"
         for i in range(9):
             for j in range(9):
@@ -66,14 +66,35 @@ class Game:
                 if j < 0 or j > 8:
                     continue
                 self.clear_empty(j, y)
+    def verify_game(self):
+        if self.alive == 0:
+            print("Game Over")
+            return 0
+        else:
+            user_wins = True
+            for i in self.bomb_coor:
+                if self.board_front[i[0]][i[1]] != "F":
+                    user_wins = False
+                    break
+            for i in self.board_front:
+                if "#" in i:
+                    user_wins = False
+                    break
+            if user_wins:
+                print("You Won!")
+                return 0
+            else:
+                return 1
+        
             
         
 game = Game()
 while game.alive:
-    
     game.print_board(game.board_back)
     print()
     game.print_board(game.board_front)
+    if game.verify_game() == 0:
+        break
     choice = int(input("""
     Select one optione:
     1.- Flag
@@ -83,5 +104,5 @@ while game.alive:
         game.set_flag()
     else:
         game.uncover()
-    if game.alive == 0:
-        break
+    
+    
